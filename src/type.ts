@@ -12,77 +12,69 @@ const blockTypeEm = 'em'
 const blockTypeBr = 'br'
 const blockTypeLi = 'li'
 
+type _Match = {
+  value: Array<string | Match>
+  _id: number
+}
+
 type MatchBlockquote = {
   type: typeof blockTypeBlockquote
-  value: Array<string | Match>
-}
+} & _Match
 
 type MatchBlockTypeH1 = {
   type: typeof blockTypeH1
-  value: Array<string | Match>
-}
+} & _Match
 
 type MatchBlockTypeH2 = {
   type: typeof blockTypeH2
-  value: Array<string | Match>
-}
+} & _Match
 
 type MatchBlockTypeH3 = {
   type: typeof blockTypeH3
-  value: Array<string | Match>
-}
+} & _Match
 
 type MatchBlockTypeH4 = {
   type: typeof blockTypeH4
-  value: Array<string | Match>
-}
+} & _Match
 
 type MatchBlockTypeH5 = {
   type: typeof blockTypeH5
-  value: Array<string | Match>
-}
+} & _Match
 
 type MatchBlockTypeH6 = {
   type: typeof blockTypeH6
-  value: Array<string | Match>
-}
+} & _Match
 
 type MatchBlockTypeImg = {
   type: typeof blockTypeImg
-  value: Array<string | Match>
   attributes: {
     href: string
   }
-}
+} & _Match
 
 type MatchBlockTypeA = {
   type: typeof blockTypeA
-  value: Array<string | Match>
   attributes: {
     src: string
     alt: string
   }
-}
+} & _Match
 
 type MatchBlockTypeStrong = {
   type: typeof blockTypeStrong
-  value: Array<string | Match>
-}
+} & _Match
 
 type MatchBlockTypeEm = {
   type: typeof blockTypeEm
-  value: Array<string | Match>
-}
+} & _Match
 
 type MatchBlockTypeBr = {
   type: typeof blockTypeBr
-  value: Array<string | Match>
-}
+} & _Match
 
 type MatchBlockTypeLi = {
   type: typeof blockTypeLi
-  value: Array<string | Match>
-}
+} & _Match
 
 export type Match =
   | MatchBlockquote

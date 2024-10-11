@@ -6,16 +6,18 @@ import {Match} from './type'
 const createElement = (
   type: Match['type'],
   value: Match['value'],
+  _id: number,
   attributes = {},
 ): Match =>
   ({
     type,
+    _id,
     value,
     ...attributes,
   } as Match)
 
 const parseElements = (text: string, elem: Array<Match | string> = []) => {
-  const elements: Array<Match | string> = []
+  let elements: Array<Match | string> = []
   const tmp: Array<Match | string> = elem
 
   /**
@@ -25,7 +27,10 @@ const parseElements = (text: string, elem: Array<Match | string> = []) => {
     const elem: Array<Match | string> = []
     value.split(/(\\\d+)/g).forEach((part) => {
       if (part.startsWith('\\')) {
-        elem.push(tmp[parseInt(part.slice(1))])
+        const id = parseInt(part.slice(1))
+
+        const item = tmp.find((a) => typeof a !== 'string' && a._id === id)
+        item ? elem.push(item) : elem.push(tmp[parseInt(part.slice(1))])
       } else if (part) {
         elem.push(part)
       }
@@ -36,13 +41,13 @@ const parseElements = (text: string, elem: Array<Match | string> = []) => {
 
   // blockquote
   text = text.replace(/^> (.+)$/gm, (_, content: string) => {
-    tmp.push(createElement('blockquote', parseElements(content)))
+    tmp.push(createElement('blockquote', parseElements(content), tmp.length))
     return `\\${tmp.length - 1}`
   })
 
   // lists
   text = text.replace(/^[-*+] (.+)$/gm, (_, content: string) => {
-    tmp.push(createElement('li', parseElements(content)))
+    tmp.push(createElement('li', parseElements(content), tmp.length))
     return `\\${tmp.length - 1}`
   })
 
@@ -52,7 +57,7 @@ const parseElements = (text: string, elem: Array<Match | string> = []) => {
     (_, hashes: string, content: string) => {
       const type = `h${hashes.length}` as 'h1'
 
-      tmp.push(createElement(type, parseElements(content)))
+      tmp.push(createElement(type, parseElements(content), tmp.length))
       return `\\${tmp.length - 1}`
     },
   )
@@ -64,9 +69,15 @@ const parseElements = (text: string, elem: Array<Match | string> = []) => {
       const elem = getInlineFromPart(content)
 
       if (match.startsWith('!')) {
-        tmp.push(createElement('img', [''], {src: url, alt: content}))
+        tmp.push(
+          createElement('img', [''], tmp.length, {src: url, alt: content}),
+        )
       } else {
-        tmp.push(createElement('a', parseElements(content, elem), {href: url}))
+        tmp.push(
+          createElement('a', parseElements(content, elem), tmp.length, {
+            href: url,
+          }),
+        )
       }
 
       return `\\${tmp.length - 1}`
@@ -80,19 +91,18 @@ const parseElements = (text: string, elem: Array<Match | string> = []) => {
       const type = marker.length === 1 ? 'em' : 'strong'
       const elem = getInlineFromPart(content)
 
-      tmp.push(createElement(type, parseElements(content, elem)))
+      tmp.push(createElement(type, parseElements(content, elem), tmp.length))
       return `\\${tmp.length - 1}`
     },
   )
 
   // breaklines
   text = text.replace(/(\r\n|\n|\r|<br\/>)/gm, (_, content) => {
-    tmp.push(createElement('br', [content]))
+    tmp.push(createElement('br', [content], tmp.length))
     return `\\${tmp.length - 1}`
   })
 
-  elements.push(...getInlineFromPart(text))
-  return elements
+  return elements.concat(getInlineFromPart(text))
 }
 
 export const parse = (text: string) => parseElements(text)
