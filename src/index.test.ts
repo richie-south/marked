@@ -5,7 +5,7 @@ describe('markdown parser', () => {
     const string = '[text](https://example.com)'
     const result = parse(string)
     expect(result).toEqual([
-      {type: 'a', value: ['text'], href: 'https://example.com'},
+      {type: 'a', _id: 0, value: ['text'], href: 'https://example.com'},
     ])
   })
 
@@ -16,9 +16,11 @@ describe('markdown parser', () => {
     expect(result).toEqual([
       {
         type: 'strong',
+        _id: 1,
         value: [
           {
             type: 'a',
+            _id: 0,
             value: ['text'],
             href: 'https://example.com',
           },
@@ -34,6 +36,7 @@ describe('markdown parser', () => {
     expect(result).toEqual([
       {
         type: 'strong',
+        _id: 0,
         value: ['bold'],
       },
     ])
@@ -46,9 +49,11 @@ describe('markdown parser', () => {
     expect(result).toEqual([
       {
         type: 'a',
+        _id: 0,
         value: [
           {
             type: 'strong',
+            _id: 1,
             value: ['text'],
           },
         ],
@@ -64,6 +69,7 @@ describe('markdown parser', () => {
     expect(result).toEqual([
       {
         type: 'em',
+        _id: 0,
         value: ['italic'],
       },
     ])
@@ -76,9 +82,11 @@ describe('markdown parser', () => {
     expect(result).toEqual([
       {
         type: 'em',
+        _id: 1,
         value: [
           {
             type: 'a',
+            _id: 0,
             value: ['text'],
             href: 'https://example.com',
           },
@@ -94,16 +102,19 @@ describe('markdown parser', () => {
     expect(result).toEqual([
       {
         type: 'strong',
+        _id: 1,
         value: ['bold'],
       },
       ' ',
       {
         type: 'em',
+        _id: 2,
         value: ['italic'],
       },
       ' ',
       {
         type: 'a',
+        _id: 0,
         value: ['text'],
         href: 'https://example.com',
       },
@@ -117,6 +128,7 @@ describe('markdown parser', () => {
     expect(result).toEqual([
       {
         type: 'h3',
+        _id: 0,
         value: ['title'],
       },
     ])
@@ -129,9 +141,11 @@ describe('markdown parser', () => {
     expect(result).toEqual([
       {
         type: 'h3',
+        _id: 0,
         value: [
           {
             type: 'strong',
+            _id: 0,
             value: ['bold'],
           },
         ],
@@ -145,27 +159,33 @@ hej
 **next**`
 
     const result = parse(string)
+
     expect(result).toEqual([
       {
         type: 'h3',
+        _id: 0,
         value: [
           {
             type: 'strong',
+            _id: 0,
             value: ['bold'],
           },
         ],
       },
       {
         type: 'br',
+        _id: 2,
         value: ['\n'],
       },
       'hej',
       {
         type: 'br',
+        _id: 3,
         value: ['\n'],
       },
       {
         type: 'strong',
+        _id: 1,
         value: ['next'],
       },
     ])
@@ -181,23 +201,28 @@ hej
       'hej',
       {
         type: 'br',
+        _id: 2,
         value: ['\n'],
       },
       {
         type: 'h3',
+        _id: 0,
         value: [
           {
             type: 'strong',
+            _id: 0,
             value: ['bold'],
           },
         ],
       },
       {
         type: 'br',
+        _id: 3,
         value: ['\n'],
       },
       {
         type: 'strong',
+        _id: 1,
         value: ['next'],
       },
     ])
@@ -211,10 +236,12 @@ hej`
     expect(result).toEqual([
       {
         type: 'br',
+        _id: 0,
         value: ['<br/>'],
       },
       {
         type: 'br',
+        _id: 1,
         value: ['\n'],
       },
       'hej',
@@ -230,23 +257,116 @@ hej`
     expect(result).toEqual([
       {
         type: 'li',
+        _id: 0,
         value: ['asd'],
       },
       {
         type: 'br',
+        _id: 3,
         value: ['\n'],
       },
       {
         type: 'li',
+        _id: 1,
         value: ['asd'],
       },
       {
         type: 'br',
+        _id: 4,
         value: ['\n'],
       },
       {
         type: 'li',
+        _id: 2,
         value: ['asd'],
+      },
+    ])
+  })
+
+  it('parse seperate bold links next to eachother', () => {
+    const string = '**[link1](https://link1.se)** **[link2](https://link2.se)**'
+    const result = parse(string)
+
+    expect(result).toEqual([
+      {
+        type: 'strong',
+        _id: 2,
+        value: [
+          {
+            type: 'a',
+            _id: 0,
+            value: ['link1'],
+            href: 'https://link1.se',
+          },
+        ],
+      },
+      ' ',
+      {
+        type: 'strong',
+        _id: 3,
+        value: [
+          {
+            type: 'a',
+            _id: 1,
+            value: ['link2'],
+            href: 'https://link2.se',
+          },
+        ],
+      },
+    ])
+  })
+
+  it('parse seperate inline bold links next to eachother', () => {
+    const string =
+      '[**bold link**](https://link.se) [**bold link**](https://link.se)'
+    const result = parse(string)
+
+    expect(result).toEqual([
+      {
+        type: 'a',
+        _id: 0,
+        value: [
+          {
+            type: 'strong',
+            _id: 1,
+            value: ['bold link'],
+          },
+        ],
+        href: 'https://link.se',
+      },
+      ' ',
+      {
+        type: 'a',
+        _id: 1,
+        value: [
+          {
+            type: 'strong',
+            _id: 1,
+            value: ['bold link'],
+          },
+        ],
+        href: 'https://link.se',
+      },
+    ])
+  })
+
+  it('parse links next to eachother', () => {
+    const string = '[bold link](https://link.se) [bold link](https://link.se)'
+    const result = parse(string)
+
+    expect(result).toEqual([
+      {
+        type: 'a',
+        _id: 0,
+        value: ['bold link'],
+        href: 'https://link.se',
+      },
+      ' ',
+      {
+        type: 'a',
+        _id: 1,
+        value: ['bold link'],
+        href: 'https://link.se',
       },
     ])
   })
