@@ -17,6 +17,7 @@
     "jsx": "react-jsx",
     "declaration": true,
     "outDir": "./lib",
+    "removeComments": true
   },
   "include": [
     "src"
