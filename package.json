@@ -10,8 +10,20 @@
     "build": "tsc",
     "test": "tsc & jest"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "markdown",
+    "parser",
+    "string"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/richie-south/marked.git"
+  },
+  "author": "richard söderman",
+  "bugs": {
+    "url": "https://github.com/richie-south/marked/issues"
+  },
+  "homepage": "https://github.com/richie-south/marked#readme",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^29.5.13",
