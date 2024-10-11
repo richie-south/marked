@@ -21,16 +21,6 @@ const parseElements = (text: string, elem: Array<Match | string> = []) => {
   /**
    * split by markes and push back text pr parsed elements
    */
-  const orderElements = (value: string) => {
-    value.split(/(\\\d+)/g).forEach((part) => {
-      if (part.startsWith('\\')) {
-        elements.push(tmp[parseInt(part.slice(1))])
-      } else if (part) {
-        elements.push(part)
-      }
-    })
-  }
-
   const getInlineFromPart = (value: string) => {
     const elem: Array<Match | string> = []
     value.split(/(\\\d+)/g).forEach((part) => {
@@ -45,13 +35,13 @@ const parseElements = (text: string, elem: Array<Match | string> = []) => {
   }
 
   // blockquote
-  text = text.replace(/^> (.+)$/gm, (match, content: string) => {
+  text = text.replace(/^> (.+)$/gm, (_, content: string) => {
     tmp.push(createElement('blockquote', parseElements(content)))
     return `\\${tmp.length - 1}`
   })
 
   // lists
-  text = text.replace(/^[-*+] (.+)$/gm, (match, content: string) => {
+  text = text.replace(/^[-*+] (.+)$/gm, (_, content: string) => {
     tmp.push(createElement('li', parseElements(content)))
     return `\\${tmp.length - 1}`
   })
@@ -59,7 +49,7 @@ const parseElements = (text: string, elem: Array<Match | string> = []) => {
   // heading
   text = text.replace(
     /^(#{1,6}) (.+)$/gm,
-    (match, hashes: string, content: string) => {
+    (_, hashes: string, content: string) => {
       const type = `h${hashes.length}` as 'h1'
 
       tmp.push(createElement(type, parseElements(content)))
@@ -86,7 +76,7 @@ const parseElements = (text: string, elem: Array<Match | string> = []) => {
   // Handle bold and italic
   text = text.replace(
     /([*_]{1,3})(.+?)\1/g,
-    (match, marker: string, content: string) => {
+    (_, marker: string, content: string) => {
       const type = marker.length === 1 ? 'em' : 'strong'
       const elem = getInlineFromPart(content)
 
@@ -96,12 +86,12 @@ const parseElements = (text: string, elem: Array<Match | string> = []) => {
   )
 
   // breaklines
-  text = text.replace(/(\r\n|\n|\r|<br\/>)/gm, (match, content) => {
+  text = text.replace(/(\r\n|\n|\r|<br\/>)/gm, (_, content) => {
     tmp.push(createElement('br', [content]))
     return `\\${tmp.length - 1}`
   })
 
-  orderElements(text)
+  elements.push(...getInlineFromPart(text))
   return elements
 }
 
