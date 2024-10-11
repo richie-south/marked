@@ -45,24 +45,27 @@ const parseElements = (text: string, elem: Array<Match | string> = []) => {
   }
 
   // blockquote
-  text = text.replace(/^> (.+)$/gm, (match, content) => {
+  text = text.replace(/^> (.+)$/gm, (match, content: string) => {
     tmp.push(createElement('blockquote', parseElements(content)))
     return `\\${tmp.length - 1}`
   })
 
   // lists
-  text = text.replace(/^[-*+] (.+)$/gm, (match, content) => {
+  text = text.replace(/^[-*+] (.+)$/gm, (match, content: string) => {
     tmp.push(createElement('li', parseElements(content)))
     return `\\${tmp.length - 1}`
   })
 
   // heading
-  text = text.replace(/^(#{1,6}) (.+)$/gm, (match, hashes: string, content) => {
-    const type = `h${hashes.length}` as 'h1'
+  text = text.replace(
+    /^(#{1,6}) (.+)$/gm,
+    (match, hashes: string, content: string) => {
+      const type = `h${hashes.length}` as 'h1'
 
-    tmp.push(createElement(type, parseElements(content)))
-    return `\\${tmp.length - 1}`
-  })
+      tmp.push(createElement(type, parseElements(content)))
+      return `\\${tmp.length - 1}`
+    },
+  )
 
   // Handle links, email and images
   text = text.replace(
