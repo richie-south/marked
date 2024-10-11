@@ -23,6 +23,8 @@ $ npm i tiny-marked
 **Usage example**
 
 ```typescript
+import {parse} from 'tiny-marked'
+
 const result = parse('**[text](https://example.com)**')
 /* result
   [
