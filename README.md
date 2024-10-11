@@ -14,6 +14,12 @@ A tiny markdown subset parser
 > - Blockquote
 > - Unordered lists
 
+**Install**
+
+```
+$ npm i tiny-marked
+```
+
 **Usage example**
 
 ```typescript
