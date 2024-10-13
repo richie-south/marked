@@ -228,6 +228,24 @@ hej`
   })
 })
 
+describe('no match', () => {
+  it('no matches', () => {
+    const string =
+      'Lorem ipsum dolor sit amet consectetur adipiscing elit nascetur etiam, posuere porta accumsan per urna eleifend magnis. Sociis mattis curabitur nec elementum pulvinar dictums aptent montes conubia, tortor nibh morbi lacus praesent cursus maecenas cubilia dictum tristique, augue'
+    const result = parse(string, [
+      blockquoteParser,
+      listParser,
+      headingParser,
+      linkParser,
+      boldItalicParser,
+      breaklinesParser,
+    ])
+    expect(result).toEqual([
+      'Lorem ipsum dolor sit amet consectetur adipiscing elit nascetur etiam, posuere porta accumsan per urna eleifend magnis. Sociis mattis curabitur nec elementum pulvinar dictums aptent montes conubia, tortor nibh morbi lacus praesent cursus maecenas cubilia dictum tristique, augue',
+    ])
+  })
+})
+
 describe('combined parsers parser', () => {
   it('bold link', () => {
     const string = '**[text](https://example.com)**'
@@ -577,6 +595,66 @@ hej
           },
         ],
         href: 'https://link.se',
+      },
+    ])
+  })
+
+  it('no matches inbetween text', () => {
+    const string =
+      'Lorem ipsum [**bold link**](https://link.se) adipiscing elit nascetur etiam, posuere porta **accumsan** per urna eleifend magnis. *Sociis* mattis curabitur nec elementum pulvinar dictums aptent montes conubia, ***tortor*** nibh morbi lacus praesent cursus maecenas cubilia [link](https://example.se)'
+    const result = parse(string, [
+      blockquoteParser,
+      listParser,
+      headingParser,
+      linkParser,
+      boldItalicParser,
+      breaklinesParser,
+    ])
+
+    expect(result).toEqual([
+      'Lorem ipsum ',
+      {
+        type: 'a',
+        _id: 0,
+        value: [
+          {
+            type: 'strong',
+            _id: 1,
+            value: ['bold link'],
+          },
+        ],
+        href: 'https://link.se',
+      },
+      ' adipiscing elit nascetur etiam, posuere porta ',
+      {
+        type: 'strong',
+        _id: 2,
+        value: ['accumsan'],
+      },
+      ' per urna eleifend magnis. ',
+      {
+        type: 'em',
+        _id: 3,
+        value: ['Sociis'],
+      },
+      ' mattis curabitur nec elementum pulvinar dictums aptent montes conubia, ',
+      {
+        type: 'em',
+        _id: 4,
+        value: [
+          {
+            type: 'strong',
+            _id: 1,
+            value: ['tortor'],
+          },
+        ],
+      },
+      ' nibh morbi lacus praesent cursus maecenas cubilia ',
+      {
+        type: 'a',
+        _id: 1,
+        value: ['link'],
+        href: 'https://example.se',
       },
     ])
   })
