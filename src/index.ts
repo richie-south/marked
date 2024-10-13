@@ -33,8 +33,7 @@ const parseElements = (
       if (part.startsWith('\\')) {
         const id = parseInt(part.slice(1))
 
-        const item = tmp.find((a) => typeof a !== 'string' && a._id === id)
-        item ? elem.push(item) : elem.push(tmp[parseInt(part.slice(1))])
+        elem.push(tmp.find((a: Match) => a._id === id))
       } else if (part) {
         elem.push(part)
       }
