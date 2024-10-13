@@ -104,12 +104,11 @@ interface ParserProps {
     elem?: (Match | string)[],
   ) => (string | Match)[]
   getInlineFromPart: (content: string) => (string | Match)[]
-  tmp: (Match | string)[]
 }
 
 interface ParserReturn {
   regex: RegExp | string
-  replacer: (substring: string, ...args: any[]) => string
+  replacer: (id: number, substring: string, ...args: any[]) => Match
 }
 
 export interface Parser {

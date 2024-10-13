@@ -49,8 +49,13 @@ const parseElements = (
   for (let index = 0; index < parsers.length; index++) {
     const parser = parsers[index]
 
-    const p = parser({parseElements: pE, getInlineFromPart, tmp})
-    text = text.replace(p.regex, p.replacer)
+    const p = parser({parseElements: pE, getInlineFromPart})
+    text = text.replace(p.regex, (...args) => {
+      const element = p.replacer(tmp.length, ...args)
+      tmp.push(element)
+
+      return `\\${tmp.length - 1}`
+    })
   }
 
   return elements.concat(getInlineFromPart(text))
