@@ -1,12 +1,11 @@
 import {createElement} from '..'
 import {Parser} from '../type'
 
-export const listParser: Parser = ({parseElements, tmp}) => {
+export const listParser: Parser = ({parseElements}) => {
   return {
     regex: /^[-*+] (.+)$/gm,
-    replacer: (_, content: string) => {
-      tmp.push(createElement('li', parseElements(content), tmp.length))
-      return `\\${tmp.length - 1}`
+    replacer: (id, _, content: string) => {
+      return createElement('li', parseElements(content), id)
     },
   }
 }

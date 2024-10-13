@@ -1,12 +1,11 @@
 import {createElement} from '..'
 import {Parser} from '../type'
 
-export const breaklinesParser: Parser = ({tmp}) => {
+export const breaklinesParser: Parser = () => {
   return {
     regex: /(\r\n|\n|\r|<br\/>)/gm,
-    replacer: (_, content: string) => {
-      tmp.push(createElement('br', [content], tmp.length))
-      return `\\${tmp.length - 1}`
+    replacer: (id, _, content: string) => {
+      return createElement('br', [content], id)
     },
   }
 }

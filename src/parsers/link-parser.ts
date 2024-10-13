@@ -1,24 +1,19 @@
 import {createElement} from '..'
 import {Parser} from '../type'
 
-export const linkParser: Parser = ({parseElements, getInlineFromPart, tmp}) => {
+export const linkParser: Parser = ({parseElements, getInlineFromPart}) => {
   return {
     regex: /!?\[([^\]]+)]\((.*?)\)/g,
-    replacer: (match, content: string, url: string) => {
+    replacer: (id, match, content: string, url: string) => {
       const elem = getInlineFromPart(content)
 
       if (match.startsWith('!')) {
-        tmp.push(
-          createElement('img', [''], tmp.length, {src: url, alt: content}),
-        )
-      } else {
-        tmp.push(
-          createElement('a', parseElements(content, elem), tmp.length, {
-            href: url,
-          }),
-        )
+        return createElement('img', [''], id, {src: url, alt: content})
       }
-      return `\\${tmp.length - 1}`
+
+      return createElement('a', parseElements(content, elem), id, {
+        href: url,
+      })
     },
   }
 }
