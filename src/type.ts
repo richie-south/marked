@@ -17,6 +17,12 @@ type _Match = {
   _id: number
 }
 
+type MatchGeneric = {
+  type: string
+  value: Array<string | Match>
+  _id: number
+}
+
 type MatchBlockquote = {
   type: typeof blockTypeBlockquote
 } & _Match
@@ -90,6 +96,7 @@ export type Match =
   | MatchBlockTypeEm
   | MatchBlockTypeBr
   | MatchBlockTypeLi
+  | MatchGeneric
 
 interface ParserProps {
   parseElements: (
