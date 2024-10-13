@@ -90,3 +90,21 @@ export type Match =
   | MatchBlockTypeEm
   | MatchBlockTypeBr
   | MatchBlockTypeLi
+
+interface ParserProps {
+  parseElements: (
+    content: string,
+    elem?: (Match | string)[],
+  ) => (string | Match)[]
+  getInlineFromPart: (content: string) => (string | Match)[]
+  tmp: (Match | string)[]
+}
+
+interface ParserReturn {
+  regex: RegExp | string
+  replacer: (substring: string, ...args: any[]) => string
+}
+
+export interface Parser {
+  (props: ParserProps): ParserReturn
+}
