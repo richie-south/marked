@@ -51,8 +51,7 @@ const parseElements = (
 
     const p = parser({parseElements: pE, getInlineFromPart})
     text = text.replace(p.regex, (...args) => {
-      const element = p.replacer(tmp.length, ...args)
-      tmp.push(element)
+      tmp.push(p.replacer(tmp.length, ...args))
 
       return `\\${tmp.length - 1}`
     })

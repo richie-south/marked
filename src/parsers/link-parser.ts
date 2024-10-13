@@ -5,12 +5,11 @@ export const linkParser: Parser = ({parseElements, getInlineFromPart}) => {
   return {
     regex: /!?\[([^\]]+)]\((.*?)\)/g,
     replacer: (id, match, content: string, url: string) => {
-      const elem = getInlineFromPart(content)
-
       if (match.startsWith('!')) {
         return createElement('img', [''], id, {src: url, alt: content})
       }
 
+      const elem = getInlineFromPart(content)
       return createElement('a', parseElements(content, elem), id, {
         href: url,
       })

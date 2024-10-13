@@ -19,9 +19,7 @@ type _Match = {
 
 type MatchGeneric = {
   type: string
-  value: Array<string | Match>
-  _id: number
-}
+} & _Match
 
 type MatchBlockquote = {
   type: typeof blockTypeBlockquote
