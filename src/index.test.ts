@@ -1,10 +1,31 @@
-import {parse} from './index'
+import {createElement, parse} from './index'
 import {blockquoteParser} from './parsers/blockquote-parser'
 import {boldItalicParser} from './parsers/bold-italic-parser'
 import {breaklinesParser} from './parsers/breaklines-parser'
 import {headingParser} from './parsers/heading-parser'
 import {linkParser} from './parsers/link-parser'
 import {listParser} from './parsers/list-parser'
+import {Parser} from './type'
+
+const woowParser: Parser = ({parseElements, tmp}) => {
+  return {
+    regex: /(woow[a-z\d-]+)/gim,
+    replacer: (match) => {
+      const content = match.slice(4)
+
+      tmp.push(createElement('woow', parseElements(content), tmp.length))
+      return `\\${tmp.length - 1}`
+    },
+  }
+}
+
+describe('example woow parser', () => {
+  it('woow', () => {
+    const string = 'woowHello'
+    const result = parse(string, [woowParser])
+    expect(result).toEqual([{type: 'woow', _id: 0, value: ['Hello']}])
+  })
+})
 
 describe('link parser', () => {
   it('one link', () => {
@@ -92,16 +113,20 @@ describe('bold italic parser', () => {
     const result = parse(string, [boldItalicParser])
 
     expect(result).not.toEqual([
+      // this is desired result
       {type: 'em', _id: 0, value: [{type: 'strong', _id: 1, value: ['title']}]},
     ])
 
-    /* [
-      {
-        type: 'strong',
-        _id: 0,
-        value: ['title'],
-      },
-    ] */
+    expect(result).toEqual(
+      // this is actual result
+      [
+        {
+          type: 'strong',
+          _id: 0,
+          value: ['title'],
+        },
+      ],
+    )
   })
 
   it('multible bold', () => {
