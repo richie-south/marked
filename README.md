@@ -4,14 +4,14 @@ A tiny markdown subset parser
 
 **Can handle:**
 
-> - Links
-> - Images
-> - Email
-> - Bold
-> - Italic
-> - Heading
-> - Breaklines
 > - Blockquote
+> - Bold
+> - Breaklines
+> - Email
+> - Heading
+> - Images
+> - Italic
+> - Links
 > - Unordered lists
 
 **Install**
@@ -24,8 +24,22 @@ $ npm i tiny-marked
 
 ```typescript
 import {parse} from 'tiny-marked'
+import {blockquoteParser} from 'tiny-marked/lib/parsers/blockquote-parser'
+import {boldItalicParser} from 'tiny-marked/lib/parsers/bold-italic-parser'
+import {breaklinesParser} from 'tiny-marked/lib/parsers/breaklines-parser'
+import {headingParser} from 'tiny-marked/lib/parsers/heading-parser'
+import {linkParser} from 'tiny-marked/lib/parsers/link-parser'
+import {listParser} from 'tiny-marked/lib/parsers/list-parser'
 
-const result = parse('**[text](https://example.com)**')
+const result = parse('**[text](https://example.com)**', [
+  blockquoteParser,
+  listParser,
+  headingParser,
+  linkParser,
+  boldItalicParser,
+  breaklinesParser,
+])
+
 /* result
   [
     {
@@ -41,7 +55,15 @@ const result = parse('**[text](https://example.com)**')
   ]
 */
 
-const result = parse('**bold** *italic* [text](https://example.com)')
+const result = parse('**bold** *italic* [text](https://example.com)', [
+  blockquoteParser,
+  listParser,
+  headingParser,
+  linkParser,
+  boldItalicParser,
+  breaklinesParser,
+])
+
 /* result
   [
     {
@@ -61,6 +83,110 @@ const result = parse('**bold** *italic* [text](https://example.com)')
     },
   ]
 */
+```
+
+## Built in parsers
+
+**blockquoteParser**
+
+Parses blocks quotes.
+
+import:
+
+```typescript
+import {blockquoteParser} from 'tiny-marked/lib/parsers/blockquote-parser'
+```
+
+Example:
+
+```
+> Hello
+```
+
+**listParser**
+
+Parses unordered lists
+
+import:
+
+```typescript
+import {listParser} from 'tiny-marked/lib/parsers/list-parser'
+```
+
+Example:
+
+```
+  * Hello
+  * hello
+```
+
+**headingParser**
+
+Parses headings 1-6
+
+import:
+
+```typescript
+import {headingParser} from 'tiny-marked/lib/parsers/heading-parser'
+```
+
+Example:
+
+```
+# Hello
+###### Hello
+```
+
+**linkParser**
+
+Parses links, images, emails
+
+import:
+
+```typescript
+import {linkParser} from 'tiny-marked/lib/parsers/link-parser'
+```
+
+Example:
+
+```
+[link](https//example.com)
+![image alt text](https//image-link.com)
+```
+
+**boldItalicParser**
+
+Parses bold and italic
+
+import:
+
+```typescript
+import {boldItalicParser} from 'tiny-marked/lib/parsers/bold-italic-parser'
+```
+
+Example:
+
+```
+**This text is bold**
+*Italic text*
+```
+
+**breaklinesParser**
+
+Parses break lines
+
+import:
+
+```typescript
+import {breaklinesParser} from 'tiny-marked/lib/parsers/breaklines-parser'
+```
+
+Example:
+
+```
+\n
+\r
+<br />
 ```
 
 ### Build string or components
@@ -221,4 +347,28 @@ console.log(build(data))
 /** result
   <strong><a href="https://example.com">bold link</a></strong> <em>italic</em>
 */
+```
+
+## Create your own parser
+
+Create a function that implements the `Parser` interface.
+
+**Example**
+
+"woow" parser
+
+```typescript
+import {createElement} from 'tiny-marked'
+
+const woowParser: Parser = ({parseElements, tmp}) => {
+  return {
+    regex: /(woow[a-z\d-]+)/gim, // matches on "woow" then everything until a space or enter
+    replacer: (match) => {
+      const content = match.slice(4) // everything after "woow" can be parsed again by another parser
+
+      tmp.push(createElement('woow', parseElements(content), tmp.length)) // push our element to the tmp array
+      return `\\${tmp.length - 1}` // replaces woow with an index to rebuild correct in correct order later
+    },
+  }
+}
 ```
