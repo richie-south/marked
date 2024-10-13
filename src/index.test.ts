@@ -600,7 +600,6 @@ describe('performance', () => {
     const afterDate = new Date()
 
     const time = afterDate.getTime() - beforeDate.getTime()
-    console.log('time', time)
 
     expect(time).toBeLessThanOrEqual(8)
   })
