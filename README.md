@@ -355,20 +355,39 @@ Create a function that implements the `Parser` interface.
 
 **Example**
 
-"woow" parser
+```
+woowHello
+```
 
 ```typescript
 import {createElement} from 'tiny-marked'
 
-const woowParser: Parser = ({parseElements, tmp}) => {
+const woowParser: Parser = ({parseElements}) => {
   return {
-    regex: /(woow[a-z\d-]+)/gim, // matches on "woow" then everything until a space or enter
-    replacer: (match) => {
-      const content = match.slice(4) // everything after "woow" can be parsed again by another parser
+    /**
+     * Add a regex
+     * This example matches on "woow" then everything until a space or enter
+     **/
+    regex: /(woow[a-z\d-]+)/gim,
 
-      tmp.push(createElement('woow', parseElements(content), tmp.length)) // push our element to the tmp array
-      return `\\${tmp.length - 1}` // replaces woow with an index to rebuild correct in correct order later
+    /**
+     * Add a replacer function,
+     * The first param will be id (not an uniq id!)
+     * Then matching results from your reges, could be multible match params depending on your regex
+     **/
+    replacer: (id, match) => {
+      const content = match.slice(4) // get everything after "woow"
+
+      // create your element, this one is called woow
+      // pass your content with the matcher removed (remove "wooow")
+      // this content can be parsed again so its importat to remove the matcher or endless recursion will occur
+      return createElement('woow', parseElements(content), id)
     },
   }
 }
+
+/**
+ * match result from woowParser with input "woowHello"
+ * [{type: 'woow', value: ['Hello']}]
+ **/
 ```
