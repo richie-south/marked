@@ -1,17 +1,233 @@
 import {parse} from './index'
+import {blockquoteParser} from './parsers/blockquote-parser'
+import {boldItalicParser} from './parsers/bold-italic-parser'
+import {breaklinesParser} from './parsers/breaklines-parser'
+import {headingParser} from './parsers/heading-parser'
+import {linkParser} from './parsers/link-parser'
+import {listParser} from './parsers/list-parser'
 
-describe('markdown parser', () => {
-  it('parse link', () => {
+describe('link parser', () => {
+  it('one link', () => {
     const string = '[text](https://example.com)'
-    const result = parse(string)
+    const result = parse(string, [linkParser])
     expect(result).toEqual([
       {type: 'a', _id: 0, value: ['text'], href: 'https://example.com'},
     ])
   })
 
-  it('parse bold link', () => {
+  it('two links', () => {
+    const string = '[text](https://example.com)[text2](https://example2.com)'
+    const result = parse(string, [linkParser])
+    expect(result).toEqual([
+      {type: 'a', _id: 0, value: ['text'], href: 'https://example.com'},
+      {type: 'a', _id: 1, value: ['text2'], href: 'https://example2.com'},
+    ])
+  })
+
+  it('two links with space', () => {
+    const string = '[text](https://example.com) [text2](https://example2.com)'
+    const result = parse(string, [linkParser])
+    expect(result).toEqual([
+      {type: 'a', _id: 0, value: ['text'], href: 'https://example.com'},
+      ' ',
+      {type: 'a', _id: 1, value: ['text2'], href: 'https://example2.com'},
+    ])
+  })
+})
+
+describe('heading parser', () => {
+  it('h1', () => {
+    const string = '# title'
+    const result = parse(string, [headingParser])
+    expect(result).toEqual([{type: 'h1', _id: 0, value: ['title']}])
+  })
+
+  it('h2', () => {
+    const string = '## title'
+    const result = parse(string, [headingParser])
+    expect(result).toEqual([{type: 'h2', _id: 0, value: ['title']}])
+  })
+
+  it('h3', () => {
+    const string = '### title'
+    const result = parse(string, [headingParser])
+    expect(result).toEqual([{type: 'h3', _id: 0, value: ['title']}])
+  })
+
+  it('h4', () => {
+    const string = '#### title'
+    const result = parse(string, [headingParser])
+    expect(result).toEqual([{type: 'h4', _id: 0, value: ['title']}])
+  })
+
+  it('h5', () => {
+    const string = '##### title'
+    const result = parse(string, [headingParser])
+    expect(result).toEqual([{type: 'h5', _id: 0, value: ['title']}])
+  })
+
+  it('h6', () => {
+    const string = '###### title'
+    const result = parse(string, [headingParser])
+    expect(result).toEqual([{type: 'h6', _id: 0, value: ['title']}])
+  })
+})
+
+describe('bold italic parser', () => {
+  it('bold', () => {
+    const string = '**title**'
+    const result = parse(string, [boldItalicParser])
+    expect(result).toEqual([{type: 'strong', _id: 0, value: ['title']}])
+  })
+
+  it('italic', () => {
+    const string = '*title*'
+    const result = parse(string, [boldItalicParser])
+    expect(result).toEqual([{type: 'em', _id: 0, value: ['title']}])
+  })
+
+  // NOT SUPORTED YET
+  it('italic bold (not suported)', () => {
+    const string = '***title***'
+    const result = parse(string, [boldItalicParser])
+
+    expect(result).not.toEqual([
+      {type: 'em', _id: 0, value: [{type: 'strong', _id: 1, value: ['title']}]},
+    ])
+
+    /* [
+      {
+        type: 'strong',
+        _id: 0,
+        value: ['title'],
+      },
+    ] */
+  })
+
+  it('multible bold', () => {
+    const string = '**title** **title2**'
+    const result = parse(string, [boldItalicParser])
+    expect(result).toEqual([
+      {type: 'strong', _id: 0, value: ['title']},
+      ' ',
+      {type: 'strong', _id: 1, value: ['title2']},
+    ])
+  })
+
+  it('multible italic', () => {
+    const string = '*title* *title2*'
+    const result = parse(string, [boldItalicParser])
+    expect(result).toEqual([
+      {type: 'em', _id: 0, value: ['title']},
+      ' ',
+      {type: 'em', _id: 1, value: ['title2']},
+    ])
+  })
+})
+
+describe('blockquote parser', () => {
+  it('one block', () => {
+    const string = '> block'
+    const result = parse(string, [blockquoteParser])
+
+    expect(result).toEqual([
+      {
+        type: 'blockquote',
+        _id: 0,
+        value: ['block'],
+      },
+    ])
+  })
+
+  it('multible blocks', () => {
+    const string = `> block
+> block2`
+    const result = parse(string, [blockquoteParser])
+
+    expect(result).toEqual([
+      {
+        type: 'blockquote',
+        _id: 0,
+        value: ['block'],
+      },
+      '\n',
+      {
+        type: 'blockquote',
+        _id: 1,
+        value: ['block2'],
+      },
+    ])
+  })
+})
+
+describe('list parser', () => {
+  it('one list item', () => {
+    const string = '* item'
+    const result = parse(string, [listParser])
+
+    expect(result).toEqual([
+      {
+        type: 'li',
+        _id: 0,
+        value: ['item'],
+      },
+    ])
+  })
+
+  it('multible list items', () => {
+    const string = `* item
+* item 2`
+    const result = parse(string, [listParser])
+
+    expect(result).toEqual([
+      {
+        type: 'li',
+        _id: 0,
+        value: ['item'],
+      },
+      '\n',
+      {
+        type: 'li',
+        _id: 1,
+        value: ['item 2'],
+      },
+    ])
+  })
+})
+
+describe('breaklines parser', () => {
+  it('breaklines', () => {
+    const string = `<br/>
+hej`
+    const result = parse(string, [breaklinesParser])
+
+    expect(result).toEqual([
+      {
+        type: 'br',
+        _id: 0,
+        value: ['<br/>'],
+      },
+      {
+        type: 'br',
+        _id: 1,
+        value: ['\n'],
+      },
+      'hej',
+    ])
+  })
+})
+
+describe('combined parsers parser', () => {
+  it('bold link', () => {
     const string = '**[text](https://example.com)**'
-    const result = parse(string)
+    const result = parse(string, [
+      blockquoteParser,
+      listParser,
+      headingParser,
+      linkParser,
+      boldItalicParser,
+      breaklinesParser,
+    ])
 
     expect(result).toEqual([
       {
@@ -29,22 +245,16 @@ describe('markdown parser', () => {
     ])
   })
 
-  it('parse bold', () => {
-    const string = '**bold**'
-    const result = parse(string)
-
-    expect(result).toEqual([
-      {
-        type: 'strong',
-        _id: 0,
-        value: ['bold'],
-      },
-    ])
-  })
-
-  it('parse bold inside link', () => {
+  it('bold inside link', () => {
     const string = '[**text**](https://example.com)'
-    const result = parse(string)
+    const result = parse(string, [
+      blockquoteParser,
+      listParser,
+      headingParser,
+      linkParser,
+      boldItalicParser,
+      breaklinesParser,
+    ])
 
     expect(result).toEqual([
       {
@@ -62,22 +272,16 @@ describe('markdown parser', () => {
     ])
   })
 
-  it('parse italic', () => {
-    const string = '*italic*'
-    const result = parse(string)
-
-    expect(result).toEqual([
-      {
-        type: 'em',
-        _id: 0,
-        value: ['italic'],
-      },
-    ])
-  })
-
-  it('parse italic link', () => {
+  it('italic link', () => {
     const string = '*[text](https://example.com)*'
-    const result = parse(string)
+    const result = parse(string, [
+      blockquoteParser,
+      listParser,
+      headingParser,
+      linkParser,
+      boldItalicParser,
+      breaklinesParser,
+    ])
 
     expect(result).toEqual([
       {
@@ -95,9 +299,16 @@ describe('markdown parser', () => {
     ])
   })
 
-  it('parse bold italic and link next to eachother', () => {
+  it('bold italic and link next to eachother', () => {
     const string = '**bold** *italic* [text](https://example.com)'
-    const result = parse(string)
+    const result = parse(string, [
+      blockquoteParser,
+      listParser,
+      headingParser,
+      linkParser,
+      boldItalicParser,
+      breaklinesParser,
+    ])
 
     expect(result).toEqual([
       {
@@ -121,22 +332,16 @@ describe('markdown parser', () => {
     ])
   })
 
-  it('parse heading', () => {
-    const string = '### title'
-    const result = parse(string)
-
-    expect(result).toEqual([
-      {
-        type: 'h3',
-        _id: 0,
-        value: ['title'],
-      },
-    ])
-  })
-
-  it('parse bolded heading', () => {
+  it('bolded heading', () => {
     const string = '### **bold**'
-    const result = parse(string)
+    const result = parse(string, [
+      blockquoteParser,
+      listParser,
+      headingParser,
+      linkParser,
+      boldItalicParser,
+      breaklinesParser,
+    ])
 
     expect(result).toEqual([
       {
@@ -153,12 +358,19 @@ describe('markdown parser', () => {
     ])
   })
 
-  it('parse multiline heading first', () => {
+  it('multiline heading first', () => {
     const string = `### **bold**
 hej
 **next**`
 
-    const result = parse(string)
+    const result = parse(string, [
+      blockquoteParser,
+      listParser,
+      headingParser,
+      linkParser,
+      boldItalicParser,
+      breaklinesParser,
+    ])
 
     expect(result).toEqual([
       {
@@ -191,11 +403,18 @@ hej
     ])
   })
 
-  it('parse multiline heading middle', () => {
+  it('multiline heading middle', () => {
     const string = `hej
 ### **bold**
 **next**`
-    const result = parse(string)
+    const result = parse(string, [
+      blockquoteParser,
+      listParser,
+      headingParser,
+      linkParser,
+      boldItalicParser,
+      breaklinesParser,
+    ])
 
     expect(result).toEqual([
       'hej',
@@ -228,31 +447,18 @@ hej
     ])
   })
 
-  it('parse breaklines', () => {
-    const string = `<br/>
-hej`
-    const result = parse(string)
-
-    expect(result).toEqual([
-      {
-        type: 'br',
-        _id: 0,
-        value: ['<br/>'],
-      },
-      {
-        type: 'br',
-        _id: 1,
-        value: ['\n'],
-      },
-      'hej',
-    ])
-  })
-
-  it('parse list', () => {
+  it('list with breaklines', () => {
     const string = `* asd
 * asd
 * asd`
-    const result = parse(string)
+    const result = parse(string, [
+      blockquoteParser,
+      listParser,
+      headingParser,
+      linkParser,
+      boldItalicParser,
+      breaklinesParser,
+    ])
 
     expect(result).toEqual([
       {
@@ -283,9 +489,16 @@ hej`
     ])
   })
 
-  it('parse seperate bold links next to eachother', () => {
+  it('seperate bold links next to eachother', () => {
     const string = '**[link1](https://link1.se)** **[link2](https://link2.se)**'
-    const result = parse(string)
+    const result = parse(string, [
+      blockquoteParser,
+      listParser,
+      headingParser,
+      linkParser,
+      boldItalicParser,
+      breaklinesParser,
+    ])
 
     expect(result).toEqual([
       {
@@ -316,56 +529,42 @@ hej`
     ])
   })
 
-  it('parse seperate inline bold links next to eachother', () => {
+  it('seperate inline bold links next to eachother', () => {
     const string =
       '[**bold link**](https://link.se) [**bold link**](https://link.se)'
-    const result = parse(string)
-
-    expect(result).toEqual([
-      {
-        type: 'a',
-        _id: 0,
-        value: [
-          {
-            type: 'strong',
-            _id: 1,
-            value: ['bold link'],
-          },
-        ],
-        href: 'https://link.se',
-      },
-      ' ',
-      {
-        type: 'a',
-        _id: 1,
-        value: [
-          {
-            type: 'strong',
-            _id: 1,
-            value: ['bold link'],
-          },
-        ],
-        href: 'https://link.se',
-      },
+    const result = parse(string, [
+      blockquoteParser,
+      listParser,
+      headingParser,
+      linkParser,
+      boldItalicParser,
+      breaklinesParser,
     ])
-  })
-
-  it('parse links next to eachother', () => {
-    const string = '[bold link](https://link.se) [bold link](https://link.se)'
-    const result = parse(string)
 
     expect(result).toEqual([
       {
         type: 'a',
         _id: 0,
-        value: ['bold link'],
+        value: [
+          {
+            type: 'strong',
+            _id: 1,
+            value: ['bold link'],
+          },
+        ],
         href: 'https://link.se',
       },
       ' ',
       {
         type: 'a',
         _id: 1,
-        value: ['bold link'],
+        value: [
+          {
+            type: 'strong',
+            _id: 1,
+            value: ['bold link'],
+          },
+        ],
         href: 'https://link.se',
       },
     ])
