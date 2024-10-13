@@ -107,26 +107,13 @@ describe('bold italic parser', () => {
     expect(result).toEqual([{type: 'em', _id: 0, value: ['title']}])
   })
 
-  // NOT SUPORTED YET
-  it('italic bold (not suported)', () => {
+  it('italic bold', () => {
     const string = '***title***'
     const result = parse(string, [boldItalicParser])
 
-    expect(result).not.toEqual([
-      // this is desired result
+    expect(result).toEqual([
       {type: 'em', _id: 0, value: [{type: 'strong', _id: 1, value: ['title']}]},
     ])
-
-    expect(result).toEqual(
-      // this is actual result
-      [
-        {
-          type: 'strong',
-          _id: 0,
-          value: ['title'],
-        },
-      ],
-    )
   })
 
   it('multible bold', () => {
