@@ -7,7 +7,7 @@ import {linkParser} from './parsers/link-parser'
 import {listParser} from './parsers/list-parser'
 import {Parser} from './type'
 
-const woowParser: Parser = ({parseElements}) => {
+const woowParser: Parser<'woow'> = ({parseElements}) => {
   return {
     regex: /(woow[a-z\d-]+)/gim,
     replacer: (id, match) => {
