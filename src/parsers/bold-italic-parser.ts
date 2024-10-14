@@ -11,7 +11,7 @@ export const boldItalicParser: Parser = ({
       const markerLength = marker.length
       const hasMutlible = markerLength > 2
 
-      // example both italic bold
+      // for example it can be both italic and bold
       if (hasMutlible) {
         // prefer em over strong
         const matchSubset = match.slice(1, -1)
