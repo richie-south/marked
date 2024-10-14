@@ -28,7 +28,10 @@ const parseElements = <T>(
    */
   const getInlineFromPart = (value: string) => {
     const elem: (string | Match<T>)[] = []
-    value.split(/(\\\d+)/g).forEach((part) => {
+    const parts = value.split(/(\\\d+)/g)
+    for (let index = 0; index < parts.length; index++) {
+      const part = parts[index]
+
       if (part.startsWith('\\')) {
         const id = parseInt(part.slice(1))
 
@@ -36,7 +39,7 @@ const parseElements = <T>(
       } else if (part) {
         elem.push(part)
       }
-    })
+    }
 
     return elem
   }
