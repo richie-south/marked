@@ -215,7 +215,7 @@ function build(data) {
 
   if (data.type === 'a') {
     const components = data.value.map(build).join('')
-    return `<a href="${arguments.href}">${components}</a>`
+    return `<a href="${data.href}">${components}</a>`
   }
 
   return data.match
