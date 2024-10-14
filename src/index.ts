@@ -21,7 +21,6 @@ const parseElements = (
   parsers: Parser[],
   elem: (string | Match)[] = [],
 ) => {
-  let elements: (string | Match)[] = []
   const tmp: (string | Match)[] = elem
 
   /**
@@ -56,7 +55,7 @@ const parseElements = (
     })
   }
 
-  return elements.concat(getInlineFromPart(text))
+  return getInlineFromPart(text)
 }
 
 export const parse = (text: string, parsers: Parser[]) =>
