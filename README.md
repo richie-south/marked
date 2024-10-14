@@ -87,7 +87,7 @@ const result = parse('**bold** *italic* [text](https://example.com)', [
 
 ## Built in parsers
 
-**blockquoteParser**
+### blockquoteParser
 
 Parses blocks quotes.
 
@@ -103,7 +103,7 @@ Example:
 > Hello
 ```
 
-**listParser**
+### listParser
 
 Parses unordered lists
 
@@ -120,7 +120,7 @@ Example:
   * hello
 ```
 
-**headingParser**
+### headingParser
 
 Parses headings 1-6
 
@@ -137,7 +137,7 @@ Example:
 ###### Hello
 ```
 
-**linkParser**
+### linkParser
 
 Parses links, images, emails
 
@@ -154,7 +154,7 @@ Example:
 ![image alt text](https//image-link.com)
 ```
 
-**boldItalicParser**
+### boldItalicParser
 
 Parses bold and italic
 
@@ -171,7 +171,7 @@ Example:
 *Italic text*
 ```
 
-**breaklinesParser**
+### breaklinesParser
 
 Parses break lines
 
@@ -189,7 +189,7 @@ Example:
 <br />
 ```
 
-### Build string or components
+# Build string or components
 
 Some alternatives to building component or string from parse result.
 
