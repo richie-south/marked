@@ -1,7 +1,9 @@
 import {createElement} from '..'
 import {Parser} from '../type'
 
-export const headingParser: Parser<'headingParser'> = ({parseElements}) => {
+export const headingParser: Parser<'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'> = ({
+  parseElements,
+}) => {
   return {
     regex: /^(#{1,6}) (.+)$/gm,
     replacer: (id, _, hashes: string, content: string) => {

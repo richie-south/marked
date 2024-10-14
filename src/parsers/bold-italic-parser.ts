@@ -1,7 +1,7 @@
 import {createElement} from '..'
 import {Parser} from '../type'
 
-export const boldItalicParser: Parser<'boldItalicParser'> = ({
+export const boldItalicParser: Parser<'em' | 'strong'> = ({
   parseElements,
   getInlineFromPart,
 }) => {

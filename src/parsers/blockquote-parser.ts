@@ -1,9 +1,7 @@
 import {createElement} from '..'
 import {Parser} from '../type'
 
-export const blockquoteParser: Parser<'blockquoteParser'> = ({
-  parseElements,
-}) => {
+export const blockquoteParser: Parser<'blockquote'> = ({parseElements}) => {
   return {
     regex: /^> (.+)$/gm,
     replacer: (id, _, content: string) =>

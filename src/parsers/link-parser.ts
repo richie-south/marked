@@ -1,7 +1,7 @@
 import {createElement} from '..'
 import {Parser} from '../type'
 
-export const linkParser: Parser<'linkParser'> = ({
+export const linkParser: Parser<'a' | 'img'> = ({
   parseElements,
   getInlineFromPart,
 }) => {
