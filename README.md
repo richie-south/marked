@@ -362,7 +362,8 @@ woowHello
 ```typescript
 import {createElement} from 'tiny-marked'
 
-const woowParser: Parser = ({parseElements}) => {
+// parser type Parser<'woow'> should match createElement('woow'
+const woowParser: Parser<'woow'> = ({parseElements}) => {
   return {
     /**
      * Add a regex
