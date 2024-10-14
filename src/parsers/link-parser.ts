@@ -1,7 +1,10 @@
 import {createElement} from '..'
 import {Parser} from '../type'
 
-export const linkParser: Parser = ({parseElements, getInlineFromPart}) => {
+export const linkParser: Parser<'linkParser'> = ({
+  parseElements,
+  getInlineFromPart,
+}) => {
   return {
     regex: /!?\[([^\]]+)]\((.*?)\)/g,
     replacer: (id, match, content: string, url: string) => {
