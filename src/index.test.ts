@@ -244,6 +244,28 @@ hej`
       'hej',
     ])
   })
+
+  it('Multible enters', () => {
+    const string = `Multible enters
+
+1. asd.`
+    const result = parse(string, [breaklinesParser])
+
+    expect(result).toEqual([
+      'Multible enters',
+      {
+        type: 'br',
+        _id: 0,
+        value: ['\n'],
+      },
+      {
+        type: 'br',
+        _id: 1,
+        value: ['\n'],
+      },
+      '1. asd.',
+    ])
+  })
 })
 
 describe('no match', () => {
