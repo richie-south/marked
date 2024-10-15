@@ -17,7 +17,7 @@ export const createElement = <T>(
   } as Match<T>)
 
 const parseElements = <T>(
-  text: string,
+  text: string = '',
   parsers: Parser<T>[],
   elem: (string | Match<T>)[] = [],
 ) => {
