@@ -26,6 +26,24 @@ describe('example woow parser', () => {
   })
 })
 
+describe('errors', () => {
+  it('no text', () => {
+    const result = parse(undefined as any, [boldItalicParser])
+    expect(result).toEqual([])
+  })
+
+  it('no parsers', () => {
+    const result = parse('', undefined as any)
+    expect(result).toEqual([])
+  })
+
+  it('wrong text type', () => {
+    expect(() => {
+      const result = parse([] as any, [boldItalicParser])
+    }).toThrow(TypeError)
+  })
+})
+
 describe('link parser', () => {
   it('one link', () => {
     const string = '[text](https://example.com)'
