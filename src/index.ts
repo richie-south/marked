@@ -28,13 +28,13 @@ const parseElements = <T>(
    */
   const getInlineFromPart = (value: string) => {
     const elem: (string | Match<T>)[] = []
-    const parts = value.split(/(\\\d+)/g)
+
+    const parts = value.split(/(\\{{\[tiny\d+\]}})/g)
     for (let index = 0; index < parts.length; index++) {
       const part = parts[index]
 
       if (part.startsWith('\\')) {
-        const id = parseInt(part.slice(1))
-
+        const id = parseInt(part.slice(8))
         elem.push(tmp.find((a: Match<T>) => a._id === id))
       } else if (part) {
         elem.push(part)
@@ -54,7 +54,7 @@ const parseElements = <T>(
     text = text.replace(p.regex, (...args) => {
       tmp.push(p.replacer(tmp.length, ...args))
 
-      return `\\${tmp.length - 1}`
+      return `\\{{[tiny${tmp.length - 1}]}}`
     })
   }
 
