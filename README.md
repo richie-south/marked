@@ -1,6 +1,6 @@
 # tiny-marked
 
-A tiny markdown subset parser
+A tiny markdown subset parser that is ≈ 1kb in size
 
 **Can handle:**
 
