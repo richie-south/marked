@@ -30,7 +30,7 @@ const parseElements = <T>(
     for (let index = 0; index < parts.length; index++) {
       const part = parts[index]
 
-      if (part.startsWith('\\')) {
+      if (part.startsWith('\\{{[tiny')) {
         const id = parseInt(part.slice(8, -3))
         elem.push(tmp.find((a: Match<T>) => a._id === id))
       } else if (part) {
