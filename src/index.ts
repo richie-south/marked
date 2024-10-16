@@ -1,8 +1,5 @@
 import {Match, Parser} from './type'
 
-/**
- * Creates an object representing an HTML element with optional attributes and children.
- */
 export const createElement = <T>(
   type: Match['type'],
   value: Match['value'],
@@ -34,7 +31,7 @@ const parseElements = <T>(
       const part = parts[index]
 
       if (part.startsWith('\\')) {
-        const id = parseInt(part.slice(8))
+        const id = parseInt(part.slice(8, -3))
         elem.push(tmp.find((a: Match<T>) => a._id === id))
       } else if (part) {
         elem.push(part)
