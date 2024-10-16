@@ -698,6 +698,95 @@ hej
       },
     ])
   })
+
+  it('_id should keep on increasing', () => {
+    const string =
+      '*italic* **bold** **bold** **bold** **bold** [link](https://link.se) **bold** **bold** **bold** **bold** **bold** **bold** '
+    const result = parse(string, [
+      blockquoteParser,
+      listParser,
+      headingParser,
+      linkParser,
+      boldItalicParser,
+      breaklinesParser,
+    ])
+
+    expect(result).toEqual([
+      {
+        type: 'em',
+        _id: 1,
+        value: ['italic'],
+      },
+      ' ',
+      {
+        type: 'strong',
+        _id: 2,
+        value: ['bold'],
+      },
+      ' ',
+      {
+        type: 'strong',
+        _id: 3,
+        value: ['bold'],
+      },
+      ' ',
+      {
+        type: 'strong',
+        _id: 4,
+        value: ['bold'],
+      },
+      ' ',
+      {
+        type: 'strong',
+        _id: 5,
+        value: ['bold'],
+      },
+      ' ',
+      {
+        type: 'a',
+        _id: 0,
+        value: ['link'],
+        href: 'https://link.se',
+      },
+      ' ',
+      {
+        type: 'strong',
+        _id: 6,
+        value: ['bold'],
+      },
+      ' ',
+      {
+        type: 'strong',
+        _id: 7,
+        value: ['bold'],
+      },
+      ' ',
+      {
+        type: 'strong',
+        _id: 8,
+        value: ['bold'],
+      },
+      ' ',
+      {
+        type: 'strong',
+        _id: 9,
+        value: ['bold'],
+      },
+      ' ',
+      {
+        type: 'strong',
+        _id: 10,
+        value: ['bold'],
+      },
+      ' ',
+      {
+        type: 'strong',
+        _id: 11,
+        value: ['bold'],
+      },
+      ' ',
+    ])
+  })
 })
 
 describe('performance', () => {
