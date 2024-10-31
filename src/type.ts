@@ -2,6 +2,7 @@ export type Match<T = unknown> = {
   type: T
   value: (string | Match<T>)[]
   _id: number
+  attributes: Record<string, unknown>
 }
 
 interface ParserProps {
@@ -9,7 +10,7 @@ interface ParserProps {
     content: string,
     elem?: (Match | string)[],
   ) => (string | Match)[]
-  getInlineFromPart: (content: string) => (string | Match)[]
+  getInline: (content: string) => (string | Match)[]
 }
 
 interface ParserReturn<T> {

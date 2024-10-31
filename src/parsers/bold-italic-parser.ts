@@ -3,7 +3,7 @@ import {Parser} from '../type'
 
 export const boldItalicParser: Parser<'em' | 'strong'> = ({
   parseElements,
-  getInlineFromPart,
+  getInline,
 }) => {
   return {
     regex: /([*_]{1,3})(.+?)\1/g,
@@ -15,13 +15,13 @@ export const boldItalicParser: Parser<'em' | 'strong'> = ({
       if (hasMutlible) {
         // prefer em over strong
         const matchSubset = match.slice(1, -1)
-        const elem = getInlineFromPart(matchSubset)
+        const elem = getInline(matchSubset)
 
         return createElement('em', parseElements(matchSubset, elem), id)
       }
 
       const type = markerLength === 1 ? 'em' : 'strong'
-      const elem = getInlineFromPart(content)
+      const elem = getInline(content)
 
       return createElement(type, parseElements(content, elem), id)
     },
