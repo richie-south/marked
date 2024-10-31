@@ -53,7 +53,9 @@ const result = parse('**[text](https://example.com)**', [
         {
           type: 'a',
           value: ['text'],
-          href: 'https://example.com',
+          attributes: {
+            href: 'https://example.com',
+          }
         },
       ],
     },
@@ -84,7 +86,9 @@ const result = parse('**bold** *italic* [text](https://example.com)', [
     {
       type: 'a',
       value: ['text'],
-      href: 'https://example.com',
+      attributes: {
+        href: 'https://example.com',
+      }
     },
   ]
 */
@@ -273,7 +277,7 @@ function build(data) {
 
   if (data.type === 'a') {
     const components = data.value.map(build).join('')
-    return `<a href="${data.href}">${components}</a>`
+    return `<a href="${data.attributes.href}">${components}</a>`
   }
 
   return data.match
@@ -286,7 +290,9 @@ const data = [
       {
         type: 'a',
         value: ['bold link'],
-        href: 'https://example.com',
+        attributes: {
+          href: 'https://example.com',
+        },
       },
     ],
   },
@@ -360,7 +366,7 @@ function build(list) {
         break
       case 'a':
         if (item.action === 'open') {
-          str += `<a href="${item.href}">`
+          str += `<a href="${item.attributes.href}">`
         } else {
           str += '</a>'
         }
@@ -389,7 +395,9 @@ const data = [
       {
         type: 'a',
         value: ['bold link'],
-        href: 'https://example.com',
+        attributes: {
+          href: 'https://example.com',
+        },
       },
     ],
   },
@@ -440,13 +448,16 @@ const woowParser: Parser<'woow'> = ({parseElements}) => {
       // create your element, this one is called woow
       // pass your content with the matcher removed (remove "wooow")
       // this content can be parsed again so its importat to remove the matcher or endless recursion will occur
-      return createElement('woow', parseElements(content), id)
+      return createElement('woow', id, parseElements(content), {
+        /* place custom attributes here, etc href link */
+        custom: 'example',
+      })
     },
   }
 }
 
 /**
  * match result from woowParser with input "woowHello"
- * [{type: 'woow', value: ['Hello']}]
+ * [{type: 'woow', value: ['Hello'], attributes: { custom: 'example' } }]
  **/
 ```
