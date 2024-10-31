@@ -5,6 +5,10 @@ import {breaklinesParser} from './parsers/breaklines-parser'
 import {headingParser} from './parsers/heading-parser'
 import {linkParser} from './parsers/link-parser'
 import {listParser} from './parsers/list-parser'
+import {strikeParser} from './parsers/strike-parser'
+import {footnoteParser} from './parsers/footnote-parser'
+import {blockParser} from './parsers/block-parser'
+
 import {Parser} from './type'
 
 const woowParser: Parser<'woow'> = ({parseElements}) => {
@@ -41,6 +45,120 @@ describe('errors', () => {
     expect(() => {
       const result = parse([] as any, [boldItalicParser])
     }).toThrow(TypeError)
+  })
+})
+
+describe('strike parser', () => {
+  it('strikethrough', () => {
+    const string = '~~Striked~~'
+    const result = parse(string, [strikeParser])
+
+    expect(result).toEqual([
+      {
+        type: 's',
+        _id: 0,
+        value: ['Striked'],
+      },
+    ])
+  })
+
+  it('multible strikethrough', () => {
+    const string = '~~Striked~~~~again~~'
+    const result = parse(string, [strikeParser])
+
+    expect(result).toEqual([
+      {
+        type: 's',
+        _id: 0,
+        value: ['Striked'],
+      },
+      {
+        type: 's',
+        _id: 1,
+        value: ['again'],
+      },
+    ])
+  })
+})
+
+describe('footnote parser', () => {
+  it('footnote', () => {
+    const string = `[^note]`
+    const result = parse(string, [footnoteParser])
+
+    expect(result).toEqual([
+      {
+        type: 'footnote',
+        _id: 0,
+        value: ['note'],
+      },
+    ])
+  })
+
+  it('footnote with end', () => {
+    const string = `[^note]
+text
+[^note]: result`
+    const result = parse(string, [footnoteParser])
+
+    expect(result).toEqual([
+      {
+        type: 'footnote',
+        _id: 0,
+        value: ['note'],
+      },
+      '\ntext\n',
+      {
+        type: 'footnote',
+        _id: 1,
+        value: ['note'],
+        end: true,
+      },
+      ' result',
+    ])
+  })
+})
+
+describe('block parser', () => {
+  it('single tick', () => {
+    const string = '`block`'
+    const result = parse(string, [blockParser])
+
+    expect(result).toEqual([
+      {
+        type: 'code',
+        _id: 0,
+        value: ['block'],
+      },
+    ])
+  })
+
+  it('fenced', () => {
+    const string = '```block```'
+    const result = parse(string, [blockParser])
+
+    expect(result).toEqual([
+      {
+        type: 'code',
+        _id: 0,
+        value: ['block'],
+      },
+    ])
+  })
+
+  it('fenced multiline', () => {
+    const string = `\`\`\`
+block
+\`\`\``
+    const result = parse(string, [blockParser])
+
+    expect(result).toEqual([
+      {
+        type: 'code',
+        _id: 0,
+        value: ['\nblock\n'],
+      },
+    ])
   })
 })
 
@@ -303,6 +421,34 @@ describe('combined parsers parser', () => {
         type: 'strong',
         _id: 1,
         value: [
+          {
+            type: 'a',
+            _id: 0,
+            value: ['text'],
+            href: 'https://example.com',
+          },
+        ],
+      },
+    ])
+  })
+
+  it('text and link withing the same bold wrap', () => {
+    const string = '**Lorem ipsum [text](https://example.com)**'
+    const result = parse(string, [
+      blockquoteParser,
+      listParser,
+      headingParser,
+      linkParser,
+      boldItalicParser,
+      breaklinesParser,
+    ])
+
+    expect(result).toEqual([
+      {
+        type: 'strong',
+        _id: 1,
+        value: [
+          'Lorem ipsum ',
           {
             type: 'a',
             _id: 0,
