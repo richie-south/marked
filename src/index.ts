@@ -18,7 +18,7 @@ export const createElement = <T>(
     type,
     _id,
     value,
-    ...attributes,
+    attributes,
   } as Match<T>)
 
 const parseElements = <T>(
