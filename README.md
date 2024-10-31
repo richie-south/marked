@@ -1,6 +1,8 @@
 # tiny-marked
 
-A tiny markdown subset parser that is ≈ 1kb in size
+A tiny markdown subset parser that is ≈ 1kb in size.
+Outputs a tree structure instead of completed string. This way you can handle that logic your self and render it in any way.
+Run it on frontend with react or other types of components, use Nodejs to prerender / analyze content.
 
 **Can handle:**
 
@@ -13,6 +15,9 @@ A tiny markdown subset parser that is ≈ 1kb in size
 > - Italic
 > - Links
 > - Unordered lists
+> - footnote
+> - strikethrough
+> - block
 
 **Install**
 
@@ -188,6 +193,59 @@ Example:
 \r
 <br />
 ```
+
+### footnoteParser
+
+Parses footnotes / references
+
+import:
+
+```typescript
+import {footnoteParser} from 'tiny-marked/lib/parsers/footnote-parser'
+```
+
+Example:
+
+```
+this is a footnote [^1]
+
+
+[^1]: it references this
+```
+
+### strikethroughParser
+
+Parses strikethroughs
+
+import:
+
+```typescript
+import {strikeParser} from 'tiny-marked/lib/parsers/strike-parser'
+```
+
+Example:
+
+```
+~~text~~
+```
+
+### blockParser
+
+Parses blocks / codeblocks
+
+import:
+
+```typescript
+import {blockParser} from 'tiny-marked/lib/parsers/block-parser'
+```
+
+Example:
+
+````
+\```
+content
+\```
+````
 
 # Build string or components
 
