@@ -7,7 +7,7 @@ export const strikeParser: Parser<'s'> = ({parseElements, getInline}) => {
     replacer: (id, _, __: string, content: string) => {
       const elem = getInline(content)
 
-      return createElement('s', parseElements(content, elem), id)
+      return createElement('s', id, parseElements(content, elem))
     },
   }
 }

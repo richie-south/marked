@@ -17,13 +17,13 @@ export const boldItalicParser: Parser<'em' | 'strong'> = ({
         const matchSubset = match.slice(1, -1)
         const elem = getInline(matchSubset)
 
-        return createElement('em', parseElements(matchSubset, elem), id)
+        return createElement('em', id, parseElements(matchSubset, elem))
       }
 
       const type = markerLength === 1 ? 'em' : 'strong'
       const elem = getInline(content)
 
-      return createElement(type, parseElements(content, elem), id)
+      return createElement(type, id, parseElements(content, elem))
     },
   }
 }

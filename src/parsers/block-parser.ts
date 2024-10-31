@@ -7,10 +7,10 @@ export const blockParser: Parser<'code'> = ({parseElements}) => {
     replacer: (id, match, caret, content) => {
       // fenced (multi ticks)
       if (caret) {
-        return createElement('code', parseElements(content), id)
+        return createElement('code', id, parseElements(content))
       }
 
-      return createElement('code', parseElements(match.slice(1, -1)), id)
+      return createElement('code', id, parseElements(match.slice(1, -1)))
     },
   }
 }

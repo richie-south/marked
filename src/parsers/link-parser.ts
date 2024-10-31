@@ -6,11 +6,11 @@ export const linkParser: Parser<'a' | 'img'> = ({parseElements, getInline}) => {
     regex: /!?\[([^\]]+)]\((.*?)\)/g,
     replacer: (id, match, content: string, url: string) => {
       if (match.startsWith('!')) {
-        return createElement('img', [''], id, {src: url, alt: content})
+        return createElement('img', id, [''], {src: url, alt: content})
       }
 
       const elem = getInline(content)
-      return createElement('a', parseElements(content, elem), id, {
+      return createElement('a', id, parseElements(content, elem), {
         href: url,
       })
     },

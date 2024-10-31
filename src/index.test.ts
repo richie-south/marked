@@ -17,7 +17,7 @@ const woowParser: Parser<'woow'> = ({parseElements}) => {
     replacer: (id, match) => {
       const content = match.slice(4)
 
-      return createElement('woow', parseElements(content), id)
+      return createElement('woow', id, parseElements(content))
     },
   }
 }
@@ -1089,7 +1089,7 @@ describe('performance', () => {
       return {
         regex: /🥱/g,
         replacer: (id) => {
-          return createElement('EmojiParser', [], id)
+          return createElement('EmojiParser', id, [])
         },
       }
     }

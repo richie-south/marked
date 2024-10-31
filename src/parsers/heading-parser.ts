@@ -8,7 +8,7 @@ export const headingParser: Parser<Headings> = ({parseElements}) => {
     replacer: (id, _, hashes: string, content: string) => {
       const type = `h${hashes.length}` as Headings
 
-      return createElement(type, parseElements(content), id)
+      return createElement(type, id, parseElements(content))
     },
   }
 }

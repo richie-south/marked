@@ -3,15 +3,15 @@ import {Match, Parser} from './type'
 /**
  * Creates a Match object
  * @param {string} type type of element, example: h1
- * @param {(string | Match)[]} value nested matches | values
  * @param {number} _id none uniq id
+ * @param {(string | Match)[]} value nested matches | values
  * @param {Record<string, unknown>} attributes any custom attributes will be placed within attributes object
  * @returns Match
  */
 export const createElement = <T>(
   type: Match['type'],
-  value: Match['value'],
   _id: number,
+  value: Match['value'],
   attributes: Record<string, unknown> = {},
 ): Match<T> =>
   ({

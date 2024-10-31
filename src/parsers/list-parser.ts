@@ -5,6 +5,6 @@ export const listParser: Parser<'li'> = ({parseElements}) => {
   return {
     regex: /^[-*+] (.+)$/gm,
     replacer: (id, _, content: string) =>
-      createElement('li', parseElements(content), id),
+      createElement('li', id, parseElements(content)),
   }
 }

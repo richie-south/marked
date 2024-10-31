@@ -5,6 +5,6 @@ export const blockquoteParser: Parser<'blockquote'> = ({parseElements}) => {
   return {
     regex: /^> (.+)$/gm,
     replacer: (id, _, content: string) =>
-      createElement('blockquote', parseElements(content), id),
+      createElement('blockquote', id, parseElements(content)),
   }
 }
