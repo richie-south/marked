@@ -112,6 +112,19 @@ Example:
 > Hello
 ```
 
+Result:
+
+```json
+// > block
+[
+  {
+    "type": "blockquote",
+    "value": ["block"],
+    "attributes": {}
+  }
+]
+```
+
 ### listParser
 
 Parses unordered lists
@@ -127,6 +140,19 @@ Example:
 ```
   * Hello
   * hello
+```
+
+Result:
+
+```json
+// * item
+[
+  {
+    "type": "li",
+    "value": ["item"],
+    "attributes": {}
+  }
+]
 ```
 
 ### headingParser
@@ -146,6 +172,19 @@ Example:
 ###### Hello
 ```
 
+Result:
+
+```json
+// # title
+[
+  {
+    "type": "h1",
+    "value": ["title"],
+    "attributes": {}
+  }
+]
+```
+
 ### linkParser
 
 Parses links, images, emails
@@ -161,6 +200,19 @@ Example:
 ```
 [link](https//example.com)
 ![image alt text](https//image-link.com)
+```
+
+Result:
+
+```json
+// '[text](https://example.com)'
+[
+  {
+    "type": "a",
+    "value": ["text"],
+    "attributes": {"href": "https://example.com"}
+  }
+]
 ```
 
 ### boldItalicParser
@@ -180,6 +232,19 @@ Example:
 *Italic text*
 ```
 
+Result:
+
+```json
+// **title**
+[
+  {
+    "type": "strong",
+    "value": ["title"],
+    "attributes": {}
+  }
+]
+```
+
 ### breaklinesParser
 
 Parses break lines
@@ -196,6 +261,17 @@ Example:
 \n
 \r
 <br />
+```
+
+```json
+// <br/>
+[
+  {
+    "type": "br",
+    "value": ["<br/>"],
+    "attributes": {}
+  }
+]
 ```
 
 ### footnoteParser
@@ -217,6 +293,23 @@ this is a footnote [^1]
 [^1]: it references this
 ```
 
+```json
+// [^note]
+// [^note]: result`
+[
+  {
+    "type": "footnote",
+    "value": ["note"],
+    "attributes": {}
+  },
+  {
+    "type": "footnote",
+    "value": ["note"],
+    "attributes": {"end": true}
+  }
+]
+```
+
 ### strikethroughParser
 
 Parses strikethroughs
@@ -231,6 +324,17 @@ Example:
 
 ```
 ~~text~~
+```
+
+```json
+// ~~Striked~~
+[
+  {
+    "type": "s",
+    "value": ["Striked"],
+    "attributes": {}
+  }
+]
 ```
 
 ### blockParser
@@ -250,6 +354,17 @@ Example:
 content
 \```
 ````
+
+```json
+// `block`
+[
+  {
+    "type": "code",
+    "value": ["block"],
+    "attributes": {}
+  }
+]
+```
 
 # Build string or components
 
