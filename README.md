@@ -114,15 +114,13 @@ Example:
 
 Result:
 
-```json
+```typescript
 // > block
-[
-  {
-    "type": "blockquote",
-    "value": ["block"],
-    "attributes": {}
-  }
-]
+{
+  type: 'blockquote',
+  value: ['block'],
+  attributes: {},
+}
 ```
 
 ### listParser
@@ -144,15 +142,13 @@ Example:
 
 Result:
 
-```json
+```typescript
 // * item
-[
-  {
-    "type": "li",
-    "value": ["item"],
-    "attributes": {}
-  }
-]
+{
+  type: 'li',
+  value: ['item'],
+  attributes: {},
+}
 ```
 
 ### headingParser
@@ -174,15 +170,13 @@ Example:
 
 Result:
 
-```json
+```typescript
 // # title
-[
-  {
-    "type": "h1",
-    "value": ["title"],
-    "attributes": {}
-  }
-]
+{
+  type: 'h1',
+  value: ['title'],
+  attributes: {},
+}
 ```
 
 ### linkParser
@@ -204,15 +198,13 @@ Example:
 
 Result:
 
-```json
+```typescript
 // '[text](https://example.com)'
-[
-  {
-    "type": "a",
-    "value": ["text"],
-    "attributes": {"href": "https://example.com"}
-  }
-]
+{
+  type: 'a',
+  value: ['text'],
+  attributes: {href: 'https://example.com'},
+}
 ```
 
 ### boldItalicParser
@@ -234,15 +226,13 @@ Example:
 
 Result:
 
-```json
+```typescript
 // **title**
-[
-  {
-    "type": "strong",
-    "value": ["title"],
-    "attributes": {}
-  }
-]
+{
+  type: 'strong',
+  value: ['title'],
+  attributes: {},
+}
 ```
 
 ### breaklinesParser
@@ -263,15 +253,15 @@ Example:
 <br />
 ```
 
-```json
+Result:
+
+```typescript
 // <br/>
-[
-  {
-    "type": "br",
-    "value": ["<br/>"],
-    "attributes": {}
-  }
-]
+{
+  type: 'br',
+  value: ['<br/>'],
+  attributes: {},
+}
 ```
 
 ### footnoteParser
@@ -293,21 +283,23 @@ this is a footnote [^1]
 [^1]: it references this
 ```
 
-```json
+Result:
+
+```typescript
 // [^note]
+{
+  type: "footnote",
+  value: ["note"],
+  attributes: {}
+}
+
 // [^note]: result`
-[
-  {
-    "type": "footnote",
-    "value": ["note"],
-    "attributes": {}
-  },
-  {
-    "type": "footnote",
-    "value": ["note"],
-    "attributes": {"end": true}
-  }
-]
+{
+  type: "footnote",
+  value: ["note"],
+  attributes: {"end": true}
+}
+
 ```
 
 ### strikethroughParser
@@ -326,15 +318,15 @@ Example:
 ~~text~~
 ```
 
-```json
+Result:
+
+```typescript
 // ~~Striked~~
-[
-  {
-    "type": "s",
-    "value": ["Striked"],
-    "attributes": {}
-  }
-]
+{
+  type: 's',
+  value: ['Striked'],
+  attributes: {},
+}
 ```
 
 ### blockParser
@@ -355,15 +347,15 @@ content
 \```
 ````
 
-```json
+Result:
+
+```typescript
 // `block`
-[
-  {
-    "type": "code",
-    "value": ["block"],
-    "attributes": {}
-  }
-]
+{
+  type: 'code',
+  value: ['block'],
+  attributes: {},
+}
 ```
 
 # Build string or components
