@@ -35,6 +35,9 @@ import {breaklinesParser} from 'tiny-marked/lib/parsers/breaklines-parser'
 import {headingParser} from 'tiny-marked/lib/parsers/heading-parser'
 import {linkParser} from 'tiny-marked/lib/parsers/link-parser'
 import {listParser} from 'tiny-marked/lib/parsers/list-parser'
+import {footnoteParser} from 'tiny-marked/lib/parsers/footnote-parser'
+import {strikeParser} from 'tiny-marked/lib/parsers/strike-parser'
+import {blockParser} from 'tiny-marked/lib/parsers/block-parser'
 
 const result = parse('**[text](https://example.com)**', [
   blockquoteParser,
@@ -43,6 +46,9 @@ const result = parse('**[text](https://example.com)**', [
   linkParser,
   boldItalicParser,
   breaklinesParser,
+  footnoteParser,
+  strikeParser,
+  blockParser,
 ])
 
 /* result
@@ -69,6 +75,9 @@ const result = parse('**bold** *italic* [text](https://example.com)', [
   linkParser,
   boldItalicParser,
   breaklinesParser,
+  footnoteParser,
+  strikeParser,
+  blockParser,
 ])
 
 /* result
@@ -360,11 +369,11 @@ Result:
 
 # Build string or components
 
-Some alternatives to building component or string from parse result.
+If you want to go through the result and build components, strings, analyze etc, i have two examples provided here.
 
 **First**
 
-Using recursive map
+Using recursive map, simply run a map function on every child value. This would fit almost every usecase the best.
 
 ```typescript
 function build(data) {
