@@ -183,7 +183,6 @@ describe('link parser', () => {
         value: ['text'],
         attributes: {href: 'https://example.com'},
       },
-      ,
     ])
   })
 
