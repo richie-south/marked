@@ -544,26 +544,36 @@ woowHello
 ```typescript
 import {createElement} from 'tiny-marked'
 
-// parser type Parser<'woow'> should match createElement('woow'
+// parser type Parser<'woow'> should match createElement('woow', ..)
 const woowParser: Parser<'woow'> = ({parseElements}) => {
   return {
     /**
+     * Required
      * Add a regex
-     * This example matches on "woow" then everything until a space or enter
+     * This example matches on "woow" then everything until a space or enter.
      **/
     regex: /(woow[a-z\d-]+)/gim,
 
     /**
-     * Add a replacer function,
+     * Optional
+     * Ignore nested parsing by adding name of parsers.
+     * example: adding 'boldItalicParser' for linkParser removes abillity of bolded link: **[text](example.se)**
+     **/
+    ingore: []
+
+    /**
+     * Required
+     * Add a replacer function, runs on regex match
      * The first param will be id (not an uniq id!)
-     * Then matching results from your reges, could be multible match params depending on your regex
+     * Then matching results from your reges, could be multible match params depending on your regex.
      **/
     replacer: (id, match) => {
       const content = match.slice(4) // get everything after "woow"
 
       // create your element, this one is called woow
       // pass your content with the matcher removed (remove "wooow")
-      // this content can be parsed again so its importat to remove the matcher or endless recursion will occur
+      // this content can be parsed again so its importat to remove the matcher or endless recursion will occur.
+      // You can also use the `ignore` property to prevent self reccursion if needed.
       return createElement('woow', id, parseElements(content), {
         /* place custom attributes here, etc href link */
         custom: 'example',
