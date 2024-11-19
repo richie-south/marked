@@ -14,7 +14,8 @@ interface ParserProps {
 }
 
 interface ParserReturn<T> {
-  regex: RegExp | string
+  ignore?: string[]
+  regex: RegExp | string //  | ((value: string) => RegExp | string)
   replacer: (id: number, substring: string, ...args: any[]) => Match<T>
 }
 

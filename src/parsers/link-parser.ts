@@ -4,6 +4,7 @@ import {Parser} from '../type'
 export const linkParser: Parser<'a' | 'img'> = ({parseElements, getInline}) => {
   return {
     regex: /!?\[([^\]]+)]\((.*?)\)/g,
+    ignore: ['linkParser'],
     replacer: (id, match, content: string, url: string) => {
       if (match.startsWith('!')) {
         return createElement('img', id, [''], {src: url, alt: content})

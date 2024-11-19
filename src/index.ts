@@ -25,6 +25,7 @@ const parseElements = <T>(
   text: string = '',
   parsers: Parser<T>[] = [],
   elem: (string | Match<T>)[] = [],
+  path = [],
 ) => {
   const tmp: (string | Match<T>)[] = elem
 
@@ -51,16 +52,23 @@ const parseElements = <T>(
     return elem
   }
 
-  const pE = (text: string, elem: (string | Match<T>)[] = []) =>
-    parseElements(text, parsers, elem)
+  const pE =
+    (n: string) =>
+    (text: string, elem: (string | Match<T>)[] = []) => {
+      path.push(n)
+      return parseElements(text, parsers, elem, path)
+    }
 
   for (let index = 0; index < parsers.length; index++) {
     const parser = parsers[index]
 
-    const p = parser({parseElements: pE, getInline})
+    const p = parser({parseElements: pE(parser.name), getInline})
+
+    if (path.some((a) => p.ignore?.includes(a))) continue
+
     text = text.replace(p.regex, (...args) => {
       tmp.push(p.replacer(tmp.length, ...args))
-
+      path = []
       return `\\{{[v${tmp.length - 1}]}}`
     })
   }
