@@ -1,6 +1,6 @@
 {
   "name": "tiny-marked",
-  "version": "0.0.11",
+  "version": "1.0.0",
   "description": "A ≈1kb markdown parser with tree output and Typescript typings",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
