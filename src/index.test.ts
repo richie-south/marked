@@ -22,6 +22,16 @@ const woowParser: Parser<'woow'> = ({parseElements}) => {
   }
 }
 
+const exampleLink: Parser<'exampleLink'> = ({parseElements}) => {
+  return {
+    ignore: ['linkParser', 'boldItalicParser'],
+    regex: /(example.se)/gim,
+    replacer: (id, match) => {
+      return createElement('exampleLink', id, [match])
+    },
+  }
+}
+
 describe('example woow parser', () => {
   it('woow', () => {
     const string = 'woowHello'
@@ -223,6 +233,61 @@ describe('link parser', () => {
         _id: 1,
         value: ['text2'],
         attributes: {href: 'https://example2.com'},
+      },
+    ])
+  })
+})
+
+describe('ignore', () => {
+  it('ignore nested link', () => {
+    const string = `[value example.se](link.se)`
+    const result = parse(string, [linkParser, exampleLink])
+
+    expect(result).toEqual([
+      {
+        type: 'a',
+        _id: 0,
+        value: ['value example.se'],
+        attributes: {
+          href: 'link.se',
+        },
+      },
+    ])
+  })
+
+  it('ignore nested bold', () => {
+    const string = `**example.se**`
+    const result = parse(string, [boldItalicParser, exampleLink])
+
+    expect(result).toEqual([
+      {
+        type: 'strong',
+        _id: 0,
+        value: ['example.se'],
+        attributes: {},
+      },
+    ])
+  })
+
+  it('ignore nested bolded link', () => {
+    const string = `**[example.se](link.se)**`
+    const result = parse(string, [boldItalicParser, linkParser, exampleLink])
+
+    expect(result).toEqual([
+      {
+        type: 'strong',
+        _id: 0,
+        value: [
+          {
+            type: 'a',
+            _id: 1,
+            value: ['example.se'],
+            attributes: {
+              href: 'link.se',
+            },
+          },
+        ],
+        attributes: {},
       },
     ])
   })
